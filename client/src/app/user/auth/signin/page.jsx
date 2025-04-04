@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { z } from 'zod';
 import axios from 'axios';
 import { Alert, AlertTitle } from "@/components/ui/alert"
-
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Signin(props) {
     const [showPassword, setShowPassword] = useState(false)
@@ -17,6 +18,8 @@ export default function Signin(props) {
     const [loader, setLoader] = useState(false);
     const [success, setSuccess] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+
+    const router = useRouter();
 
     const ShowPassword = () => {
         setShowPassword(!showPassword)
@@ -51,14 +54,14 @@ export default function Signin(props) {
             );
 
             if (response.data?.message) {
-                setSuccess(response.data?.message)
+                setSuccess(response?.data?.message)
                 setErrorMsg("")
-                // router.push('./user/dashboard')
+                router.push('../dashboard')
             }
             console.log(response.data);
 
         } catch (error) {
-            setErrorMsg(error.response.data?.error)
+            setErrorMsg(error.response?.data?.error)
             setSuccess("")
         } finally {
             setLoader(false);
@@ -71,8 +74,8 @@ export default function Signin(props) {
     return (
         <>
             <div className=''>
-                <div className='p-10 container h-screen mx-auto w-full lg:w-[1024px] flex'>
-                    <div className='relative flex flex-col bg-white border border-gray-200 shadow rounded-lg w-full lg:w-[45%] my-auto mx-auto'>
+                <div className='p-10 container h-screen mx-auto w-full  lg:w-[1024px] flex'>
+                    <div className='relative flex flex-col bg-white border border-gray-200 shadow rounded-lg w-full md:w-[60%] lg:w-[45%] my-auto mx-auto'>
                         <div className="h-10 mx-auto absolute top-3 right-5 left-5">
                             {
                                 success && (
@@ -96,8 +99,8 @@ export default function Signin(props) {
                             <Image
                                 alt='logo'
                                 className='w-10 h-10'
-                                width={200}
-                                height={200}
+                                width={100}
+                                height={100}
                                 src='/accets/AClogo.png'
                             />
                         </section>
@@ -107,7 +110,7 @@ export default function Signin(props) {
                         </section>
                         <div className='p-5 grid gap-2'>
 
-                            <form onSubmit={signIn}>
+                            <form onSubmit={signIn} className='flex flex-col gap-3'>
                                 <div className='flex flex-col'>
                                     <label className=''>Email</label>
                                     <input onChange={(e) => setEmail(e.target.value)} type="email" name='email' placeholder='email' className={`outline-none border border-blue-100 rounded-sm p-2 ${errors ? "border-red-500" : ""}`} />
@@ -134,8 +137,11 @@ export default function Signin(props) {
                                         ) :
                                             "Sign in"
                                     }
-
                                 </Button>
+                                <div className='grid lg:flex md:flex'>
+                                    <small className=' text-center w-full'>Already have an account <Link href="./signup" className='text-blue-600'>signup</Link></small>
+                                    <small className=' text-center w-full'>Forgot password <Link href="./reset-password" className='text-blue-600'>Reset</Link></small>
+                                </div>
                             </form>
                         </div>
                     </div>
