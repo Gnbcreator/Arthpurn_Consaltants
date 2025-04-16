@@ -14,6 +14,22 @@ const nextConfig = {
             {
                 protocol:'https',
                 hostname:"media.istockphoto.com"
+            },
+            {
+                protocol:'https',
+                hostname:"i.pravatar.cc"
+            },
+            {
+                protocol:'https',
+                hostname:"images.pexels.com"
+            },
+            {
+                protocol:'https',
+                hostname:"media.giphy.com"
+            },
+            {
+                protocol:'https',
+                hostname:"img.youtube.com"
             }
         ]
     },

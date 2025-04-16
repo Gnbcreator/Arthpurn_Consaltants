@@ -1,5 +1,5 @@
 
-import { error } from 'console';
+
 import asyncHandler from '../../utils/asyncHandler.js';
 import SendOtp from '../../utils/SendOtp.js';
 import { User } from '../model/user.model.js';
@@ -207,4 +207,27 @@ const resetPassword = asyncHandler(async (req, resp) => {
 
 })
 
-export { userRegistration, userLogin, sendOtp, resetPassword };
+
+/**
+ * Get User Details
+ */
+
+const userDetails = asyncHandler(async (req, resp) => {
+    const user = req.user;
+
+    const response = await User.findById(user?._id).select("-password -refreshToken");
+
+    if (!user) {
+        return resp.status(404).json({
+            error: "User not found...",
+            success: false
+        })
+    }
+
+    return resp.status(201).json({
+        message: "User found",
+        success: true,
+        user: response
+    })
+})
+export { userRegistration, userLogin, sendOtp, resetPassword, userDetails }

@@ -1,4 +1,4 @@
-import dotenv  from "dotenv";
+import dotenv from "dotenv";
 import express, { json } from "express";
 import cors from "cors";
 import cookieParser from 'cookie-parser'
@@ -21,9 +21,9 @@ app.use(cookieParser())
 
 //importing the routes
 import userRouter from './routes/user.route.js'
-
+import adminRoute from './routes/admin.route.js'
 
 //routes declerations
-app.use('/api/v1/user', userRouter)
-
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/admin', adminRoute);
 export { app }

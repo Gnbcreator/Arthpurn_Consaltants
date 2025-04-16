@@ -1,5 +1,5 @@
 import { Poppins } from "next/font/google";
-import "../app/globals.css" 
+import "../app/globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 
@@ -17,6 +17,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+      </head>
       <body
         className={`${poppins.variable} antialiased`}
       >

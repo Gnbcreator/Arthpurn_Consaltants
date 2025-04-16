@@ -106,7 +106,7 @@ export default function LandingPage(props) {
 
                 {/* Main content takes up all available space */}
                 <main className="flex-grow">
-                    <div className="bg-gray-100 relative flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-lg">
+                    <div className=" relative flex h-screen w-full flex-col items-center justify-center overflow-hidden rounded-lg">
                         <Particles
                             className="absolute inset-0 z-0"
                             quantity={100}
@@ -140,7 +140,7 @@ export default function LandingPage(props) {
                             </div>
 
                             <div className="mt-5 mx-auto">
-                                <Link href={"/user/auth/signup"}>
+                                <Link href={"/user/auth/signin"} prefetch={true}>
                                     <Button variant="secondary" className="bg-blue-500 w-full">
                                         Get Started
                                     </Button>

@@ -1,11 +1,5 @@
-import React from 'react';
 
+import { redirect } from 'next/navigation';
 export default function UserHome(props) {
-    return (
-        <>
-            <div className='grid place-content-center h-screen'>
-                  <h1>Dashboard</h1>
-            </div>
-        </>
-    );
+        redirect('/user/dashboard/chats')
 }

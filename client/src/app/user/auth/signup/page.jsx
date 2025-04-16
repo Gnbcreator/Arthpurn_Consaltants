@@ -102,8 +102,9 @@ export default function page(props) {
                             <Image
                                 alt='logo'
                                 className='w-10 h-10'
-                                width={100}
-                                height={100}
+                                width={200}
+                                height={200}
+                                quality={100}
                                 src='/accets/AClogo.png'
                             />
                         </section>
