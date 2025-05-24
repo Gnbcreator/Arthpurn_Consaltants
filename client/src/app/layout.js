@@ -1,6 +1,6 @@
 import { Poppins } from "next/font/google";
 import "../app/globals.css"
-import { ThemeProvider } from "@/components/ThemeProvider";
+
 
 
 
@@ -23,15 +23,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

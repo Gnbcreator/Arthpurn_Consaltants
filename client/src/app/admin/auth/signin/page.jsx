@@ -10,7 +10,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert"
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function Signin(props) {
+export default function Login(props) {
     const [showPassword, setShowPassword] = useState(false)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -40,7 +40,7 @@ export default function Signin(props) {
         setLoader(true);
 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/user/login`,
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/admin/signin`,
                 {
                     email,
                     password
@@ -59,12 +59,12 @@ export default function Signin(props) {
                 setErrorMsg("")
                 router.push('../dashboard')
             }
-            localStorage.setItem('user_id',response.data?.userId)
 
 
         } catch (error) {
             setErrorMsg(error.response?.data?.error)
             setSuccess("")
+            console.log(error)
         } finally {
             setLoader(false);
 
@@ -109,7 +109,7 @@ export default function Signin(props) {
                         </section>
                         <section className=''>
                             <h1 className='text-center text-xl font-semibold'>ArthpurnConsaltants</h1>
-                            <h1 className='text-center text-2xl mt-2 font-semibold'>Sign in</h1>
+                            <h1 className='text-center text-2xl mt-2 font-semibold'>Admin - sign in</h1>
                         </section>
                         <div className='p-5 grid gap-2'>
 
@@ -133,7 +133,7 @@ export default function Signin(props) {
                                         Accept term and Conditions
                                     </small>
                                 </div>
-                                <Button type="submit" variant='secondary' className='mt-5 w-full'>
+                                <Button type="submit" variant='default' className='mt-5 w-full'>
                                     {
                                         loader ? (
                                             <RotateCw className=' animate-spin transition-all w-10 h-10' />
@@ -141,10 +141,8 @@ export default function Signin(props) {
                                             "Sign in"
                                     }
                                 </Button>
-                                <div className='grid lg:flex md:flex'>
-                                    <small className=' text-center w-full'>Already have an account <Link href="./signup" className='text-blue-600'>signup</Link></small>
-                                    <small className=' text-center w-full'>Forgot password <Link href="./reset-password" className='text-blue-600'>Reset</Link></small>
-                                </div>
+                                <small className='text-center'>Don't have an account<Link href="./signup" className='text-blue-600'>signup</Link></small>
+
                             </form>
                         </div>
                     </div>

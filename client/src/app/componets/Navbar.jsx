@@ -23,7 +23,7 @@ export default function Navbar(props) {
 
     return (
         <>
-            <nav className='p-3 border border-b z-52  lg:flex lg:justify-between container mx-auto h-fit  lg:w-[1024px] '>
+            <nav className='p-3  z-52  lg:flex lg:justify-between container mx-auto h-fit  lg:w-[1024px] '>
                 <div>
                     <Image
                         alt='logo'

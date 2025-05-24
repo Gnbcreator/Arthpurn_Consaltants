@@ -1,5 +1,4 @@
 
-
 import asyncHandler from '../../utils/asyncHandler.js';
 import SendOtp from '../../utils/SendOtp.js';
 import { User } from '../model/user.model.js';
@@ -111,17 +110,19 @@ const userLogin = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user?._id);
     const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        sameSite: 'Strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     }
-
     return res.status(200)
         .cookie('userAccessToken', accessToken, options)
         .cookie('userRefreshToken', refreshToken, options)
 
+
         .json({
             status: 200,
             message: "User loggedin successfully...",
-
+            userId: user._id
         })
 
 })
