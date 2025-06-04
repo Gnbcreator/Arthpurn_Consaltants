@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { LogOut, Mail, Settings } from 'lucide-react'
+import { LogOut, Mail, Settings,User } from 'lucide-react'
 import {
     Popover,
     PopoverContent,
@@ -51,13 +51,19 @@ export default function Header() {
                             </div>
                             <hr />
                             <div className='my-3'>
-                                <li className='list-none mt-2 hover:bg-gray-800 px-2 py-1 rounded-md'>
+                                <li className='list-none mt-2 hover:bg-gray-200 px-2 py-1 rounded-sm'>
+                                    <Link href="/user/profile" className='flex gap-2'>
+                                        <User className='w-5 h-5' />
+                                        <span className='text-sm'>Profile</span>
+                                    </Link>
+                                </li>
+                                <li className='list-none mt-2 hover:bg-gray-200 px-2 py-1 rounded-sm'>
                                     <Link href="#" className='flex gap-2'>
                                         <Settings className='w-5 h-5' />
                                         <span className='text-sm'>setting</span>
                                     </Link>
                                 </li>
-                                <li className='list-none mt-2 hover:bg-gray-800 px-2 py-1 rounded-md'>
+                                <li className='list-none mt-2 hover:bg-gray-200 px-2 py-1 rounded-sm'>
                                     <Link href="#" className='flex gap-2'>
                                         <LogOut className='w-5 h-5' />
                                         <span className='text-sm'>Logout</span>

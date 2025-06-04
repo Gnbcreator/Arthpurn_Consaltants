@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowLeft, Paperclip, Search, Send, Smile } from 'lucide-react';
 import { sendMessages } from '@/app/sockets/clientSocket';
 
+
 const chatList = [
     {
         id: 'grp1',
@@ -236,7 +237,9 @@ export default function page() {
     const [selecteChat, setSelectedChat] = useState();
     const [userId, setUserId] = useState("")
 
-    
+
+  
+
     useEffect(() => {
         const user_id = localStorage.getItem('user_id');
         setUserId(user_id);
@@ -250,8 +253,8 @@ export default function page() {
                 <div className={`${selecteChat ? "hidden lg:flex transition-all" : ""} w-full lg:w-[300px] border border-r-gray-200 bg-white lg:h-screen lg:z-50 `}>
                     <div className=' fixed bg-white py-2 px-5 right-0 left-0 top-[49px] z-50 border border-gray-200 md:fixed md:left-[100px] md:right-0 md:py-3 lg:left-[100px] lg:w-[300px]'>
                         <div className=' border flex rounded-md px-2 border-gray-300 '>
-                            <input type="search" className='p-1 bg-transparent outline-none flex-1' />
-                            <Search className='my-auto text-gray-600' />
+                            <input type="search" placeholder='Search...' className='p-1 bg-transparent outline-none flex-1' />
+                            <Search className=' w-7 h-7 my-auto text-gray-600' />
                         </div>
                     </div>
 
@@ -307,7 +310,7 @@ export default function page() {
                                 </div>
 
                                 {/* chat pannel */}
-                                <ScrollArea className='absolute top-[49px] left-0 right-0 border flex flex-col pb-10  md:pb-40 lg:pb-40 h-screen container mx-auto lg:mx-auto xl:mx-auto 2xl:mx-auto md:mx-auto w-[95%] md:w-[95%]  lg:w-[95%] lg:top-0'>
+                                <ScrollArea className='absolute top-[49px] left-0 right-0  flex flex-col pb-10  md:pb-40 lg:pb-40 h-screen container mx-auto lg:mx-auto xl:mx-auto 2xl:mx-auto md:mx-auto w-[95%] md:w-[95%]  lg:w-[95%] lg:top-0'>
                                     <div className=' py-11'>
                                         {
                                             selecteChat?.history.map((chat, index) => (

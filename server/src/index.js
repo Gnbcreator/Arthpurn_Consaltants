@@ -12,5 +12,5 @@ connectDB().then(() => {
         console.log(`SERVER IS RUNNING ON THE PORT ${process.env.PORT || 5000}`)
     })
 }).catch((err) => {
-    console.log('Mongodb Connection faild !!!')
+    console.log("somting went wrong..")
 })

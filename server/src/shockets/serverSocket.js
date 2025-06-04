@@ -39,7 +39,7 @@ function shocketServer(app, message, userId) {
             connectedUser.get(user_id).add(socket.id);
 
          } catch (error) {
-            console.log(error)
+            console.log("somting went wrong..")
          }
       }
 

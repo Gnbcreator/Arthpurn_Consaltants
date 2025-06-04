@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
 const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
@@ -26,9 +27,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    about:{
+        type:String,
+    },
     banner: {
         type: String,
         trim: true,
+    },
+    status: {
+        type: String,
+        default: 'offline'
     },
 
     address: {
@@ -45,7 +53,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-});
+
+},
+    {
+        timestamps: true
+    }
+
+);
+
+
 
 // Password hashing middleware
 userSchema.pre("save", async function (next) {
@@ -63,7 +79,7 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.isPasswordCorrect = async function (password) {
     try {
-        
+
         return await bcrypt.compare(password, this.password);
 
     } catch (error) {

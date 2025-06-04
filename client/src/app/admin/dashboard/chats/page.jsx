@@ -6,7 +6,7 @@ import { ArrowBigLeft, ChevronLeft, ChevronsLeft, Dot, Phone, Plus, Search, Send
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { sendMessages } from '@/app/sockets/clientSocket';
-
+import axios from 'axios';
 
 const chatList = [
     {
@@ -237,6 +237,8 @@ const chatList = [
 export default function chats() {
     const [chats, setChats] = useState([]);
     const [file, setFile] = useState();
+    const [userList, setUserList] = useState([])
+
     const fileInputref = useRef(null)
 
     const handleInput = () => {
@@ -245,24 +247,31 @@ export default function chats() {
         }
     }
 
-   
+
 
     const handleFileInput = (e) => {
         setFile(e.target.files[0])
     }
-    
-    useEffect(()=>{
+
+    const getUserList = async () => {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/admin/admin-users`);
+        setUserList(response.data?.users);
+    }
+    console.log(userList)
+
+    useEffect(() => {
         sendMessages()
-    })
+        getUserList()
+    }, [])
 
     return (
         <>
-            <div className='bg-gray-100 w-full  flex h-screen '>
+            <div className='w-full  flex h-screen '>
                 <aside className={`border h-screen z-4 border-r-gray-300  w-full  lg:w-[300px] xl:w-[350px] 2xl:w-[350px] ${!chats.length ? "lg:block" : "hidden lg:grid"} `}>
 
                     <div className={` bg-white p-2  translate-x-1 md:translate-x-0 ${!chats.length ? "" : "hidden lg:grid "}`}>
                         <div className='flex border border-gray-200 rounded-lg bg-white '>
-                            <input type="search" className='font outline-none flex-1 p-[5px] bg-transparent' />
+                            <input placeholder='Search users.......' type="search" className='font outline-none flex-1 p-[5px] bg-transparent' />
                             <Search className='my-auto mx-2 text-gray-700 w-6 h-6' />
                         </div>
                     </div>
@@ -270,20 +279,24 @@ export default function chats() {
                         <div>
                             <ul>
                                 {
-                                    chatList.map((item, index) => (
+                                    userList.map((item, index) => (
                                         <li onClick={() => setChats([item])} key={index} className='px-3 py-3 hover:bg-gray-200 hover:rounded-lg hover:transition-all flex'>
                                             <div className='flex gap-2 relative flex-1'>
-                                                <Avatar className="my-auto w-10 h-10 ">
-                                                    <AvatarImage src={item.avatar} />
+                                                <Avatar className="my-auto w-10 h-10 border shadow">
+                                                    {item.avtar ? <AvatarImage src={item.avatar} /> : <AvatarImage src="/accets/avtar.png" />}
                                                 </Avatar>
                                                 {item.online && (<Dot className='z-50 w-14 h-14 top-3 left-1  text-red-500 absolute' />)}
                                                 <section className='my-auto'>
-                                                    <h1 className='text-gray-700'>{item.name}</h1>
-                                                    <p className='text-gray-400 tracking-tight line-clamp-1'>{item.lastMessage}</p>
+                                                    <h1 className='text-gray-700'>{item.fullname}</h1>
+                                                    {
+                                                        item.lastMessage ? <p className='text-gray-400 tracking-tight line-clamp-1'>{item.lastMessage}</p>
+                                                            :
+                                                            <p className='text-gray-400 tracking-tight line-clamp-1'>Last messsage</p>
+                                                    }
                                                 </section>
                                             </div>
                                             {
-                                                item.online && <small className='text-green-600'>online</small>
+                                                item.status == 'online' ? <small className='text-green-600'>online</small> : ''
                                             }
                                         </li>
                                     ))
@@ -297,7 +310,7 @@ export default function chats() {
                 {/* message and chat area */}
                 {
                     chats && (
-                        <div className={`h-screen z-4 relative flex-1  `}>
+                        <div className={`h-screen z-4 relative flex-1 bg-[url('https://blog.1a23.com/wp-content/uploads/sites/2/2020/02/pattern-28.svg')] bg-contain opacity-8 `}>
                             {
                                 chats?.map((item, index) => (
                                     <div className='relative h-screen' key={index}>

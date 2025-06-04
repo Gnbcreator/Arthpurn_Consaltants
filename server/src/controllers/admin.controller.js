@@ -1,5 +1,6 @@
 import asyncHandler from '../../utils/asyncHandler.js';
 import { Admin } from '../model/admin.model.js';
+import { User } from '../model/user.model.js';
 
 /**
  * Generate the AccessToken and Refresh Token
@@ -145,25 +146,27 @@ const adminDetails = asyncHandler(async (req, resp) => {
     })
 })
 
+const getUsers = asyncHandler(async (req, resp) => {
+
+    const response = await User.find().select('-password -refreshToken');
+
+    return resp.status(201).json({
+        success: true,
+        users: response
+    })
+
+})
 
 
 /**
  * Socket.io connection and WebShockets
  */
-const sendMessage = asyncHandler(async (req, resp) => {
- 
-    const response = await Admin.findById(admin?._id).select("-password -refreshToken");
+// const sendMessage = asyncHandler(async (req, resp) => {
+
+//     const response = await Admin.findById(admin?._id).select("-password -refreshToken");
 
 
 
-})
+// })
 
-
-
-
-
-
-
-
-
-export { adminRegistration, adminLogin, adminDetails, sendMessage }
+export { adminRegistration, adminLogin, adminDetails,getUsers }

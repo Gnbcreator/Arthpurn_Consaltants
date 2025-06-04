@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const userAuth = async (req, res, next) => {
     const rawCookie = req.headers.cookie;
     const cookies = Object.fromEntries(
-        rawCookie.split('; ').map(cookie => cookie.split('='))
+        rawCookie.split(';').map(cookie => cookie.split('='))
     );
     const token = req.cookies?.userRefreshToken || cookies?.userRefreshToken;
 

@@ -1,4 +1,5 @@
 
+import { error } from 'console';
 import asyncHandler from '../../utils/asyncHandler.js';
 import SendOtp from '../../utils/SendOtp.js';
 import { User } from '../model/user.model.js';
@@ -215,9 +216,7 @@ const resetPassword = asyncHandler(async (req, resp) => {
 
 const userDetails = asyncHandler(async (req, resp) => {
     const user = req.user;
-
     const response = await User.findById(user?._id).select("-password -refreshToken");
-
     if (!user) {
         return resp.status(404).json({
             error: "User not found...",
@@ -231,4 +230,108 @@ const userDetails = asyncHandler(async (req, resp) => {
         user: response
     })
 })
-export { userRegistration, userLogin, sendOtp, resetPassword, userDetails }
+
+/**
+ * Update user profile
+ * 
+ */
+
+const updateUserProfile = asyncHandler(async (req, resp) => {
+    const userId = req.user._id;
+    let user = await User.findById(userId).select('-password -refreshToken');
+
+    if (!user) {
+        resp.status(404).json({
+            success: false,
+            error: "Uer not found...."
+        });
+    }
+
+    const result = await User.findByIdAndUpdate(userId,
+        {
+            fullname: req.body.fullname === "" ? user.fullname : req.body.fullname,
+            mobileno: req.body.mobile_no === "" ? user.mobileno : req.body.mobile_no,
+            about: req.body.about === "" ? user.about : req.body.about
+
+        }
+    ).select('-password -refreshToken')
+
+
+    return resp.status(201).json({
+        success: true,
+        result
+    });
+
+})
+
+
+/**
+ * Update User Address
+ * 
+ */
+const updateUserAddress = asyncHandler(async (req, resp) => {
+    const userId = req.user._id;
+    let user = await User.findById(userId).select('-password -refreshToken');
+    if (!user) {
+        resp.status(404).json({
+            success: false,
+            error: "Uer not found...."
+        });
+    }
+    const result = await User.findByIdAndUpdate(userId, {
+        address: {
+            city: req.body.city === "" ? user.address?.city : req.body.city,
+            pincode: req.body.pincode === "" ? user.address?.pincode : req.body.pincode,
+            state: req.body.state === "" ? user.address?.state : req.body.state,
+            country: req.body.country === "" ? user.address?.country : req.body.country,
+        }
+
+    }).select('-password -refreshToken')
+
+
+
+    return resp.status(201).json({
+        success: true,
+        user
+    });
+
+})
+
+/**
+ * Update avtar 
+ * 
+ */
+const updateUserAvtar = asyncHandler(async (req, resp) => {
+    const userId = req.user._id;
+    let user = await User.findById(userId).select('-password -refreshToken');
+
+    if (!user) return;
+
+    const result = req.file;
+    return resp.status(201).json({
+        success: true,
+        result
+    })
+
+})
+
+/**
+ * Update Banner
+ * 
+ */
+const updateUserBanner = asyncHandler(async (req, resp) => {
+
+})
+
+
+export {
+    userRegistration,
+    userLogin,
+    sendOtp,
+    resetPassword,
+    userDetails,
+    updateUserProfile,
+    updateUserAddress,
+    updateUserAvtar,
+    updateUserBanner
+}
