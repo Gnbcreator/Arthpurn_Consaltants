@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     avtar: {
         type: String,
         trim: true,
+        
     },
     about:{
         type:String,

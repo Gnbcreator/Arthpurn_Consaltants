@@ -4,7 +4,8 @@ import asyncHandler from '../../utils/asyncHandler.js';
 import SendOtp from '../../utils/SendOtp.js';
 import { User } from '../model/user.model.js';
 import crypto from 'crypto'
-
+import { uploadOnCloudinary } from '../../utils/cloudinaryUpload.js';
+import fs from 'fs'
 
 /**
  * Generate the AccessToken and Refresh Token
@@ -307,7 +308,24 @@ const updateUserAvtar = asyncHandler(async (req, resp) => {
 
     if (!user) return;
 
-    const result = req.file;
+    const file = req.file;
+    if (!file) {
+        return resp.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const ImageDetails = await uploadOnCloudinary(file.path);
+
+    const updateAvtar = {
+        $set: {
+            avtar: ImageDetails?.secure_url
+        }
+    }
+    const result = await User.findByIdAndUpdate(userId, updateAvtar, { new: true }).select('-password -refreshToken');
+
+    if (result) {
+        fs.unlinkSync(file.path)
+    }
+
     return resp.status(201).json({
         success: true,
         result
@@ -320,6 +338,33 @@ const updateUserAvtar = asyncHandler(async (req, resp) => {
  * 
  */
 const updateUserBanner = asyncHandler(async (req, resp) => {
+    const userId = req.user._id;
+    let user = await User.findById(userId).select('-password -refreshToken');
+
+    if (!user) return;
+
+    const file = req.file;
+    if (!file) {
+        return resp.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const ImageDetails = await uploadOnCloudinary(file.path);
+
+    const updateBanner = {
+        $set: {
+            banner: ImageDetails?.secure_url
+        }
+    }
+    const result = await User.findByIdAndUpdate(userId, updateBanner, { new: true }).select('-password -refreshToken');
+
+    if (result) {
+        fs.unlinkSync(file.path)
+    }
+
+    return resp.status(201).json({
+        success: true,
+        result
+    })
 
 })
 

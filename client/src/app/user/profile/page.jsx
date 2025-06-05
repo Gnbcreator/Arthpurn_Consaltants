@@ -43,8 +43,9 @@ const joinedCoures = [
 ]
 
 function Profile() {
-   const [avatar, setAvtar] = useState();
+   const [avtar, setAvtar] = useState();
    const [bannerImg, setBannerImg] = useState();
+   const [open, setOpen] = useState(false)
    const [banner, setBanner] = useState();
    const [preview, setPreview] = useState();
    const [address, setAddress] = useState({ city: "", pincode: "", state: "", country: "" });
@@ -70,6 +71,7 @@ function Profile() {
 
    useEffect(() => {
       getData()
+
    }, [])
 
    // Update user profile
@@ -84,16 +86,25 @@ function Profile() {
    }
 
    // Update user profile
-   const loadAvtar = (e) => {
-      const file = e.target.files[0];
-      const src = URL.createObjectURL(file);
-      setPreview(src);
-      setBannerImg(src);
-      setAvtar(file)
-      setBanner(file);
+   const loadFiles = (e) => {
+
+      if (e.target.name == 'banner') {
+         const file = e.target.files[0];
+         const src = URL.createObjectURL(file);
+         setBanner(file);
+         setBannerImg(src);
+
+      }
+      else if (e.target.name == 'avtar') {
+         const file = e.target.files[0];
+         const src = URL.createObjectURL(file);
+         setPreview(src);
+         setAvtar(file)
+
+      }
    }
 
-
+   // update Profile details
    const updateProfile = async (e) => {
       e.preventDefault();
       try {
@@ -122,40 +133,13 @@ function Profile() {
          setLoader(false);
          setTimeout(() => {
             setSuccess(false);
+            setOpen(false)
          }, 3000);
 
 
       }
    }
-
-
-   // Update Avatar
-   const updateAvtar = async (e) => {
-      e.preventDefault()
-      const formdata = new FormData();
-      formdata.append('avatar', avatar);
-
-      const result = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/user/update-avtar`,
-         formdata,
-         {
-            headers: {
-               'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true
-         }
-      );
-      console.log(result.data)
-   }
-
-   // Update Banner
-   const updateBanner = async (e) => {
-      e.preventDefault()
-      const formdata = new FormData();
-      formdata.append('banner', banner);
-
-
-   }
-   //Update Address
+   //update address
    const updateAddress = async (e) => {
       e.preventDefault()
       try {
@@ -191,6 +175,71 @@ function Profile() {
 
    }
 
+   // Update Avatar
+   const updateAvtar = async (e) => {
+      e.preventDefault()
+      const formdata = new FormData();
+      formdata.append('avtar', avtar);
+
+      try {
+         setLoader(true)
+         const result = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/user/update-avtar`,
+            formdata,
+            {
+               headers: {
+                  'Content-Type': 'multipart/form-data',
+               },
+               withCredentials: true
+            }
+         );
+
+         if (result) {
+            setSuccess(true);
+         }
+      } catch (error) {
+
+      } finally {
+         setLoader(false);
+         setTimeout(() => {
+            setSuccess(false);
+         }, 3000);
+      }
+
+   }
+   // Update Banner
+   const updateBanner = async (e) => {
+      e.preventDefault()
+      const formdata = new FormData();
+      formdata.append('banner', banner);
+
+      try {
+         setLoader(true)
+         const result = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URI}/api/v1/user/update-banner`,
+            formdata,
+            {
+               headers: {
+                  'Content-Type': 'multipart/form-data',
+               },
+               withCredentials: true
+            }
+         );
+
+         if (result) {
+            setSuccess(true);
+         }
+      } catch (error) {
+
+      } finally {
+         setLoader(false);
+         setTimeout(() => {
+            setSuccess(false);
+         }, 3000);
+      }
+
+
+   }
+   //Update Address
+
 
 
 
@@ -208,11 +257,11 @@ function Profile() {
                <div className='relative'>
                   {/* banner image */}
                   <Image
-                     src={'/sample_banner.png'}
+                     src={user?.banner ? user?.banner : '/accets/t1.webp'}
                      width={896}
                      height={100}
                      alt='banner'
-                     className='  object-cover rounded-sm w-full h-[200px]'
+                     className='  object-cover object-center  rounded-sm w-full h-[200px]'
                   />
                   {/* banner update */}
                   <Dialog>
@@ -233,15 +282,15 @@ function Profile() {
                                     />
                                     <p className='font-medium opacity-40 text-center'>Click to upload or drag and drop</p>
                                     <p className='font-medium opacity-40 text-center'>SVG, PNG, JPG or GIF</p>
-                                    <input id="dropzone-file" type='file' onChange={(e) => loadAvtar(e)} name='avtar'
+                                    <input id="dropzone-file" type='file' onChange={(e) => loadFiles(e)} name='banner'
                                        className=' z-50 hidden'
                                     />
                                  </label>
                               </section>
                               {
-                                 preview && (
+                                 !!bannerImg && (
                                     <section className='border w-full h-[100px] mx-auto'>
-                                       <img src={preview} alt="preview" className=' object-cover w-full h-full' />
+                                       <img src={bannerImg} alt="bannerImg" className=' object-cover w-full h-full' />
                                     </section>)
                               }
 
@@ -249,7 +298,7 @@ function Profile() {
                            <DialogFooter className="mt-5 flex">
                               <Button type="submit" className="">
                                  {
-                                    loader ? "Save changes" : <LoaderCircle />
+                                    loader ? <RotateCw className='animate-spin transition-all' /> : "Save changes"
                                  }
                               </Button>
 
@@ -259,21 +308,21 @@ function Profile() {
                   </Dialog>
                </div>
 
-               {/* profile image */}
+               {/* Profile Avatar Image */}
 
                <div className=' p-3 flex justify-between'>
                   <div className='flex'>
-                     <div className='w-[20%]'>
-                        <section className=' bg-blue-500 rounded-full '>
+                     <div className=''>
+                        <section className='w-[260px]  rounded-full '>
                            <Image
-                              src={'/accets/avtar.png'}
-                              width={896}
+                              src={user?.avtar ? user?.avtar : '/fake_avtar.avif'}
+                              width={100}
                               height={100}
                               alt='banner'
-                              className='w-fit h-auto rounded-full'
+                              className='w-[150px] h-[150px] object-cover object-top rounded-full'
                            />
                         </section>
-                        <Dialog>
+                        <Dialog open={open} onOpenChange={setOpen} >
                            <DialogTrigger asChild>
                               <Button variant='outline' className="w-22  mt-4 mx-10"><Pencil />Avtar</Button>
                            </DialogTrigger>
@@ -291,13 +340,13 @@ function Profile() {
                                           />
                                           <p className='font-medium opacity-40 text-center'>Click to upload or drag and drop</p>
                                           <p className='font-medium opacity-40 text-center'>SVG, PNG, JPG or GIF</p>
-                                          <input id="dropzone-file" type='file' onChange={(e) => loadAvtar(e)} name='avtar'
+                                          <input id="dropzone-file" type='file' onChange={(e) => loadFiles(e)} name='avtar'
                                              className=' z-50 hidden'
                                           />
                                        </label>
                                     </section>
                                     {
-                                       preview && (
+                                       !!preview && (
                                           <section className='border w-[100px] h-[100px] rounded-full mx-auto'>
                                              <img src={preview} alt="preview" className='rounded-full object-contain w-full h-full' />
                                           </section>)
@@ -305,11 +354,23 @@ function Profile() {
 
                                  </div>
                                  <DialogFooter className="mt-5">
-                                    <Button type="submit" className="w-full">Save changes</Button>
+                                    {
+                                       loader ?
+                                          <Button type="submit" className="w-full">
+                                             <RotateCw className=' animate-spin transition-all text-xl' />
+                                          </Button>
+                                          :
+                                          <Button type="submit" className="w-full">Save changes</Button>
+                                    }
+                                    {
+
+                                    }
                                  </DialogFooter>
                               </form>
                            </DialogContent>
                         </Dialog>
+
+
                      </div>
 
                      {/* Details */}
@@ -408,6 +469,7 @@ function Profile() {
 
                </div>
                <hr />
+
                {/* testimonials */}
                <div className='p-7'>
                   <label className='text-xl font-semibold'>Your Courses</label>
@@ -427,14 +489,9 @@ function Profile() {
                      }
                   </div>
                </div>
-
             </div>
          </div>
 
-         {/* Dialog for  */}
-         <div>
-
-         </div>
 
          {/*  notifications  */}
          {
@@ -451,6 +508,9 @@ function Profile() {
                :
                ""
          }
+
+
+
       </>
    )
 }

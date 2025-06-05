@@ -22,7 +22,7 @@ router.route("/reset-password").post(resetPassword)
 
 router.route("/update-profile").post(userAuth, updateUserProfile);
 router.route("/update-address").post(userAuth, updateUserAddress);
-router.route("/update-avtar").post(userAuth, upload.single('avatar'), updateUserAvtar);
-router.route("/update-banner").post(userAuth, updateUserBanner);
+router.route("/update-avtar").post(userAuth, upload.single('avtar'), updateUserAvtar);
+router.route("/update-banner").post(userAuth,upload.single('banner'), updateUserBanner);
 
 export default router;
